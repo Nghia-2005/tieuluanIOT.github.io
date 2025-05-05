@@ -1,0 +1,10 @@
+2025-05-05 20:13:33.223 ERROR (MainThread) [homeassistant.config] Invalid config for 'mqtt' at configuration.yaml, line 2: 'broker' is an invalid option for 'mqtt', check: mqtt->0->broker, please check the docs at https://www.home-assistant.io/integrations/mqtt
+Invalid config for 'mqtt' at configuration.yaml, line 2: 'discovery' is an invalid option for 'mqtt', check: mqtt->0->discovery, please check the docs at https://www.home-assistant.io/integrations/mqtt
+Invalid config for 'mqtt' at configuration.yaml, line 2: 'discovery_prefix' is an invalid option for 'mqtt', check: mqtt->0->discovery_prefix, please check the docs at https://www.home-assistant.io/integrations/mqtt
+Invalid config for 'mqtt' at configuration.yaml, line 2: 'password' is an invalid option for 'mqtt', check: mqtt->0->password, please check the docs at https://www.home-assistant.io/integrations/mqtt
+Invalid config for 'mqtt' at configuration.yaml, line 2: 'port' is an invalid option for 'mqtt', check: mqtt->0->port, please check the docs at https://www.home-assistant.io/integrations/mqtt
+Invalid config for 'mqtt' at configuration.yaml, line 2: 'username' is an invalid option for 'mqtt', check: mqtt->0->username, please check the docs at https://www.home-assistant.io/integrations/mqtt
+2025-05-05 20:13:33.223 ERROR (MainThread) [homeassistant.setup] Setup failed for 'mqtt': Invalid config.
+2025-05-05 20:13:33.223 ERROR (MainThread) [homeassistant.setup] Unable to prepare setup for platform 'mqtt.switch': Unable to set up component.
+2025-05-05 20:13:33.223 ERROR (MainThread) [homeassistant.setup] Unable to prepare setup for platform 'mqtt.binary_sensor': Unable to set up component.
+2025-05-05 20:13:33.223 ERROR (MainThread) [homeassistant.setup] Unable to prepare setup for platform 'mqtt.cover': Unable to set up component.

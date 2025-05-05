@@ -1,0 +1,53 @@
+# Cấu hình MQTT Broker (bắt buộc)
+mqtt:
+  broker: "mosquitto" # Tên container của Mosquitto
+  port: 8123 # Cổng mặc định của MQTT
+  username: "nghia2005" # Tên đăng nhập MQTT
+  password: "nghia!!!2k5" # Mật khẩu MQTT
+  discovery: true # Bật phát hiện thiết bị tự động
+  discovery_prefix: "homeassistant" # Tiền tố cho các topic
+
+# Cảm biến cửa dùng hồng ngoại (chân DO của cảm biến IR gửi tín hiệu lên topic)
+binary_sensor:
+  - platform: mqtt # Cảm biến này dùng giao thức MQTT
+    name: "Cảm biến cửa" # Tên hiển thị trong Home Assistant
+    state_topic: "home/door/sensor" # Topic mà cảm biến gửi trạng thái (ON/OFF)
+    device_class: opening # Kiểu thiết bị là 'cửa' -> Home Assistant sẽ hiển thị biểu tượng phù hợp
+    payload_on: "ON" # Giá trị MQTT báo hiệu cửa đang mở (hoặc phát hiện có vật)
+    payload_off: "OFF" # Giá trị báo hiệu cửa đang đóng (không có vật thể)
+
+# Thiết bị điều khiển cửa (relay) - xem như công tắc điều khiển mở/đóng cửa
+switch:
+  - platform: mqtt # Thiết bị công tắc điều khiển qua MQTT
+    name: "Công tắc cửa" # Tên hiển thị
+    state_topic: "home/door/status" # Topic mà ESP8266 gửi về trạng thái hiện tại (ON/OFF)
+    command_topic: "home/door/control" # Topic mà Home Assistant gửi lệnh ON/OFF đến ESP8266
+    payload_on: "ON" # Gửi ON để mở cửa (bật relay)
+    payload_off: "OFF" # Gửi OFF để đóng cửa (tắt relay)
+    retain: true # Lưu trạng thái cuối cùng khi Home Assistant khởi động lại
+
+# Mô phỏng thiết bị cửa (cover), dùng MQTT như một thiết bị mở/đóng
+cover:
+  - platform: mqtt # Thiết bị 'cover' điều khiển cửa (mô phỏng cửa cuốn, cửa mở/đóng)
+    name: "Cửa tự động" # Tên hiển thị
+    state_topic: "home/door/status" # Topic nhận trạng thái thực tế của cửa từ ESP8266 (ON/OFF)
+    command_topic: "home/door/control" # Topic để gửi lệnh điều khiển mở/đóng cửa
+    payload_open: "ON" # Lệnh mở cửa
+    payload_close: "OFF" # Lệnh đóng cửa
+    state_open: "ON" # Trạng thái trả về khi cửa đang mở
+    state_closed: "OFF" # Trạng thái trả về khi cửa đang đóng
+    optimistic: false # Không đoán trạng thái nếu không có phản hồi MQTT từ ESP8266
+    retain: true # Ghi nhớ trạng thái cuối cùng
+
+# Tự động hóa: nếu cảm biến phát hiện cửa mở => đóng lại sau vài giây
+automation:
+  - alias: Đóng cửa khi phát hiện mở # Tên tự động hóa (hiển thị trong giao diện HA)
+    trigger:
+      platform: state # Kiểu kích hoạt là thay đổi trạng thái entity
+      entity_id: binary_sensor.cam_bien_cua # ID của cảm biến cửa (được chuyển từ tên "Cảm biến cửa" sang không dấu)
+      to: "on" # Khi cảm biến chuyển sang trạng thái ON (cửa mở)
+    action:
+      service: switch.turn_off # Hành động: tắt công tắc điều khiển cửa (tức là đóng cửa)
+      target:
+        entity_id: switch.cong_tac_cua # ID công tắc cửa cần điều khiển (cũng chuyển từ tên hiển thị thành không dấu)
+

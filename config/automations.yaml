@@ -1,0 +1,11 @@
+automation:
+  - alias: "Đóng cửa khi phát hiện mở"
+    trigger:
+      platform: state
+      entity_id: binary_sensor.cảm_biến_cửa
+      to: "on" # Khi cảm biến phát hiện cửa mở
+    action:
+      - delay: "00:00:05" # Chờ 5 giây (có thể chỉnh thời gian)
+      - service: scene.turn_on
+        target:
+          entity_id: scene.đóng_cửa # Kích hoạt cảnh đóng cửa
